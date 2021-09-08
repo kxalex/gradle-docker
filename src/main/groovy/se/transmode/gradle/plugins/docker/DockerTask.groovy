@@ -19,6 +19,8 @@ import com.google.common.annotations.VisibleForTesting
 import org.gradle.api.Task
 import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import se.transmode.gradle.plugins.docker.client.DockerClient
 import se.transmode.gradle.plugins.docker.image.Dockerfile
@@ -29,18 +31,20 @@ class DockerTask extends DockerTaskBase {
     public static final String DEFAULT_IMAGE = 'ubuntu'
 
     // Name and Email of the image maintainer
-    String maintainer
+    @Input String maintainer
     // Whether or not to execute docker to build the image (default: false)
-    Boolean dryRun
+    @Input Boolean dryRun = false
     // Whether or not to push the image into the registry (default: false)
-    Boolean push
-    // Wether or not the plugin will use pull flag when building
-    boolean pull
+    @Input Boolean push
+    // Whether or not the plugin will use pull flag when building
+    @Input boolean pull
 
+    @Internal
     @Delegate(deprecated=true)
     LegacyDockerfileMethods legacyMethods
 
     // fixme: all of this should work: dockerfile = File()/String() and dockerfile { ... } how can I achieve this?
+    @Internal
     private Dockerfile dockerfile
 
     @Override
@@ -60,7 +64,7 @@ class DockerTask extends DockerTaskBase {
      *   }
      * @param closure to configure dockerfile
      */
-    public void dockerfile(Closure closure) {
+    void dockerfile(Closure closure) {
         dockerfile.with(closure)
     }
 
@@ -68,7 +72,7 @@ class DockerTask extends DockerTaskBase {
      * Start off with existing external Dockerfile and extend it
      * @param Path to external Dockerfile
      */
-    public void setDockerfile(String path) {
+    void setDockerfile(String path) {
         dockerfile(project.file(path))
     }
 
@@ -76,7 +80,7 @@ class DockerTask extends DockerTaskBase {
      * Start off with existing external Dockerfile and extend it
      * @param External Dockerfile
      */
-    public void setDockerfile(File baseFile) {
+    void setDockerfile(File baseFile) {
         logger.info('Creating Dockerfile from file {}.', baseFile)
         dockerfile.extendDockerfile(baseFile)
     }
@@ -84,7 +88,7 @@ class DockerTask extends DockerTaskBase {
     /**
      * Name of base docker image
     */
-    String baseImage
+    @Input String baseImage
 
     /**
      * Return the base docker image.
@@ -95,7 +99,7 @@ class DockerTask extends DockerTaskBase {
      *
      * @return Name of base docker image
      */
-    public String getBaseImage() {
+    String getBaseImage() {
         if (baseImage) {
             return baseImage
         }
@@ -110,14 +114,15 @@ class DockerTask extends DockerTaskBase {
     }
 
     // Dockerfile instructions (ADD, RUN, etc.)
-    def instructions
+    @Input def instructions
     // Dockerfile staging area i.e. context dir
-    File stageDir
+    @Internal File stageDir
+
     DockerTask() {
         instructions = []
         stageDir = new File(project.buildDir, "docker")
     }
-    
+
     void contextDir(String contextDir) {
         stageDir = new File(stageDir, contextDir)
     }
@@ -153,6 +158,7 @@ class DockerTask extends DockerTaskBase {
     void build() {
         setupStageDir()
         buildDockerfile().writeToFile(new File(stageDir, 'Dockerfile'))
+        println "stageDir = $stageDir"
         tag = getImageTag()
         logger.info('Determining image tag: {}', tag)
 
@@ -165,5 +171,5 @@ class DockerTask extends DockerTaskBase {
         }
 
     }
-    
+
 }

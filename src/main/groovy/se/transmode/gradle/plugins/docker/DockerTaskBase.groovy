@@ -18,8 +18,9 @@ package se.transmode.gradle.plugins.docker
 import org.gradle.api.DefaultTask
 import org.gradle.api.logging.Logger
 
-import com.google.common.annotations.VisibleForTesting;
-
+import com.google.common.annotations.VisibleForTesting
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal;
 import se.transmode.gradle.plugins.docker.client.DockerClient
 import se.transmode.gradle.plugins.docker.client.JavaDockerClient
 import se.transmode.gradle.plugins.docker.client.NativeDockerClient
@@ -28,30 +29,30 @@ abstract class DockerTaskBase extends DefaultTask {
 
     @VisibleForTesting
     static final String LATEST_VERSION = 'latest'
-    
+
     // Name of the application being wrapped into a docker image (default: project.name)
-    String applicationName
+    @Input String applicationName
     // What to tag the created docker image with (default: group/applicationName)
-    String tag
+    @Input String tag
     // Which version to use along with the tag (default: latest)
-    String tagVersion
+    @Input String tagVersion
     // Hostname, port of the docker image registry unless Docker index is used
-    String registry
+    @Input String registry
 
     // Should we use Docker's remote API instead of the docker executable
-    Boolean useApi
-    
+    @Input Boolean useApi
+
     // Full path to the docker executable
-    String dockerBinary
-    
+    @Input String dockerBinary
+
     // URL of the remote Docker host (default: localhost)
-    String hostUrl
-    
+    @Input String hostUrl
+
     // Docker remote API credentials
-    String apiUsername
-    String apiPassword
-    String apiEmail
-    
+    @Input String apiUsername
+    @Input String apiPassword
+    @Input String apiEmail
+
     DockerTaskBase() {
         applicationName = project.name
     }
@@ -64,6 +65,7 @@ abstract class DockerTaskBase extends DefaultTask {
         tagVersion = LATEST_VERSION;
     }
 
+    @Internal
     protected String getImageTag() {
         String tag
         tag = this.tag ?: getDefaultImageTag()
@@ -92,6 +94,7 @@ abstract class DockerTaskBase extends DefaultTask {
 
     }
 
+    @Internal
     protected DockerClient getClient() {
         DockerClient client
         if(getUseApi()) {

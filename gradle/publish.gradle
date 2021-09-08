@@ -1,5 +1,4 @@
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.artifactory'
 
 publishing {
     publications {
@@ -12,9 +11,9 @@ publishing {
                 asNode().with {
 
                     appendNode('name', 'gradle-docker')
-                    appendNode('description', 'Gradle plugin to build und publish Docker images from the build script.')
-                    appendNode('url', 'https://github.com/Transmode/gradle-docker')
-                    appendNode('inceptionYear', '2013')
+                    appendNode('description', 'Gradle plugin to build and publish Docker images from the build script.')
+                    appendNode('url', 'https://github.com/kxalex/gradle-docker')
+                    appendNode('inceptionYear', '2021')
 
                     appendNode('licenses').appendNode('license').with {
                         appendNode('name', 'The Apache Software License, Version 2.0')
@@ -22,53 +21,34 @@ publishing {
                         appendNode('distribution', 'repo')
                     }
 
-                    appendNode('developers').appendNode('developer').with {
-                        appendNode('id', 'mattgruter')
-                        appendNode('name', 'Matthias Grüter')
-                        appendNode('email', 'matthias.gruter@transmode.com')
-                        appendNode('roles').appendNode('role', 'Developer')
-
+                    appendNode('developers').with {
+                        appendNode('developer').with {
+                            appendNode('id', 'mattgruter')
+                            appendNode('name', 'Matthias Grüter')
+                            appendNode('email', 'matthias.gruter@transmode.com')
+                            appendNode('roles').appendNode('role', 'Developer')
+                        }
+                        appendNode('developer').with {
+                            appendNode('id', 'kxalex')
+                            appendNode('name', 'Oleksii Shurubura')
+                            appendNode('email', 'kxalex@gmail.com')
+                            appendNode('roles').appendNode('role', 'Developer')
+                        }
                     }
 
                     appendNode('issueManagement').with {
                         appendNode('system', 'github')
-                        appendNode('url', 'https://github.com/Transmode/gradle-docker/issues')
+                        appendNode('url', 'https://github.com/kxalex/gradle-docker/issues')
                     }
 
                     appendNode('scm').with {
-                        appendNode('connection', 'scm:git@github.com/Transmode/gradle-docker.git')
-                        appendNode('developerConnection', 'scm:git@github.com/Transmode/gradle-docker.git')
-                        appendNode('url', 'scm:git://github.com/Transmode/gradle-docker.git')
+                        appendNode('connection', 'scm:git@github.com/kxalex/gradle-docker.git')
+                        appendNode('developerConnection', 'scm:git@github.com/kxalex/gradle-docker.git')
+                        appendNode('url', 'scm:git://github.com/kxalex/gradle-docker.git')
                     }
                 }
             }
         }
     }
 
-    repositories {
-        maven {
-            url 'https://api.bintray.com/maven/transmode/gradle-plugins/gradle-docker'
-            credentials {
-                username = bintrayUser
-                password = bintrayKey
-            }
-        }
-    }
-}
-
-artifactory {
-    contextUrl = artifactoryUrl
-    resolve {
-        repoKey = "repo"
-    }
-    publish {
-        repository {
-            repoKey = artifactoryRepo
-            username = bintrayUser
-            password = bintrayKey
-        }
-        defaults {
-            publications ('maven')
-        }
-    }
 }

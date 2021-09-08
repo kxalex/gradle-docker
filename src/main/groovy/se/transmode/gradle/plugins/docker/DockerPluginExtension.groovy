@@ -15,6 +15,8 @@
  */
 package se.transmode.gradle.plugins.docker
 
+import org.gradle.api.tasks.Input
+
 class DockerPluginExtension {
     String maintainer
     String baseImage

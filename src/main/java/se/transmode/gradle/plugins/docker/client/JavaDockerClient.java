@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.apache.commons.lang.StringUtils;
 import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logger;
@@ -36,26 +37,29 @@ import com.google.common.base.Preconditions;
 
 public class JavaDockerClient implements DockerClient {
 
-    private static Logger log = Logging.getLogger(JavaDockerClient.class);
+    private static final Logger log = Logging.getLogger(JavaDockerClient.class);
 
-    private com.github.dockerjava.api.DockerClient dockerClient;
+    private final com.github.dockerjava.api.DockerClient dockerClient;
 
     JavaDockerClient(com.github.dockerjava.api.DockerClient dockerClient) {
         this.dockerClient = dockerClient;
     }
 
     public static JavaDockerClient create(String url, String user, String password, String email) {
-        final DockerClientConfig.DockerClientConfigBuilder configBuilder = DockerClientConfig.createDefaultConfigBuilder();
+        DefaultDockerClientConfig.Builder configBuilder = DefaultDockerClientConfig.createDefaultConfigBuilder();
+
         if (StringUtils.isEmpty(url)) {
             log.info("Connecting to localhost");
         } else {
             log.info("Connecting to {}", url);
-            configBuilder.withUri(url);
+            configBuilder.withRegistryUrl(url);
         }
         if (StringUtils.isNotEmpty(user)) {
-            configBuilder.withUsername(user).withPassword(password).withEmail(email);
+            configBuilder.withRegistryUsername(user)
+                    .withRegistryPassword(password)
+                    .withRegistryEmail(email);
         }
-        return new JavaDockerClient(DockerClientBuilder.getInstance(configBuilder).build());
+        return new JavaDockerClient(DockerClientBuilder.getInstance(configBuilder.build()).build());
     }
 
     @Override
