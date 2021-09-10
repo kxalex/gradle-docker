@@ -15,12 +15,11 @@
  */
 package se.transmode.gradle.plugins.docker
 
-import org.gradle.api.DefaultTask
-import org.gradle.api.logging.Logger
-
 import com.google.common.annotations.VisibleForTesting
+import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Internal;
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Optional
 import se.transmode.gradle.plugins.docker.client.DockerClient
 import se.transmode.gradle.plugins.docker.client.JavaDockerClient
 import se.transmode.gradle.plugins.docker.client.NativeDockerClient
@@ -33,25 +32,25 @@ abstract class DockerTaskBase extends DefaultTask {
     // Name of the application being wrapped into a docker image (default: project.name)
     @Input String applicationName
     // What to tag the created docker image with (default: group/applicationName)
-    @Input String tag
+    @Input @Optional String tag
     // Which version to use along with the tag (default: latest)
-    @Input String tagVersion
+    @Input @Optional String tagVersion
     // Hostname, port of the docker image registry unless Docker index is used
     @Input String registry
 
     // Should we use Docker's remote API instead of the docker executable
-    @Input Boolean useApi
+    @Input @Optional Boolean useApi
 
     // Full path to the docker executable
-    @Input String dockerBinary
+    @Input @Optional String dockerBinary
 
     // URL of the remote Docker host (default: localhost)
-    @Input String hostUrl
+    @Input @Optional String hostUrl
 
     // Docker remote API credentials
-    @Input String apiUsername
-    @Input String apiPassword
-    @Input String apiEmail
+    @Input @Optional String apiUsername
+    @Input @Optional String apiPassword
+    @Input @Optional String apiEmail
 
     DockerTaskBase() {
         applicationName = project.name

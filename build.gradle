@@ -85,7 +85,7 @@ pluginBundle {
 gradlePlugin {
     plugins {
         dockerPlugin {
-            id = 'co.shurubura.gradle'
+            id = 'com.github.kxalex'
             displayName = 'gradle-docker'
             description = 'Gradle plugin to build and publish Docker images from the build script.'
             implementationClass = 'se.transmode.gradle.plugins.docker.DockerPlugin'

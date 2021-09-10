@@ -21,6 +21,7 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import se.transmode.gradle.plugins.docker.client.DockerClient
 import se.transmode.gradle.plugins.docker.image.Dockerfile
@@ -31,13 +32,13 @@ class DockerTask extends DockerTaskBase {
     public static final String DEFAULT_IMAGE = 'ubuntu'
 
     // Name and Email of the image maintainer
-    @Input String maintainer
+    @Input @Optional String maintainer
     // Whether or not to execute docker to build the image (default: false)
     @Input Boolean dryRun = false
     // Whether or not to push the image into the registry (default: false)
-    @Input Boolean push
+    @Input Boolean push = false
     // Whether or not the plugin will use pull flag when building
-    @Input boolean pull
+    @Input @Optional boolean pull
 
     @Internal
     @Delegate(deprecated=true)
@@ -114,7 +115,7 @@ class DockerTask extends DockerTaskBase {
     }
 
     // Dockerfile instructions (ADD, RUN, etc.)
-    @Input def instructions
+    @Input @Optional def instructions
     // Dockerfile staging area i.e. context dir
     @Internal File stageDir
 
