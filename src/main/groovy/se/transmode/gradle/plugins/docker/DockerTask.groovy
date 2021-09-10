@@ -38,7 +38,7 @@ class DockerTask extends DockerTaskBase {
     // Whether or not to push the image into the registry (default: false)
     @Input Boolean push = false
     // Whether or not the plugin will use pull flag when building
-    @Input @Optional boolean pull
+    @Input boolean pull
 
     @Internal
     @Delegate(deprecated=true)

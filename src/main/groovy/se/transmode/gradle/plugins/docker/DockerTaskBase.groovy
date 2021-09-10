@@ -36,7 +36,7 @@ abstract class DockerTaskBase extends DefaultTask {
     // Which version to use along with the tag (default: latest)
     @Input @Optional String tagVersion
     // Hostname, port of the docker image registry unless Docker index is used
-    @Input String registry
+    @Input @Optional String registry
 
     // Should we use Docker's remote API instead of the docker executable
     @Input @Optional Boolean useApi
